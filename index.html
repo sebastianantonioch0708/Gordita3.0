@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GORDITA 💖</title>
+<style>
+  :root{
+    --pink-1:#ffe4ec;--pink-2:#ffd6e0;--pink-3:#ffcce0;
+    --btn:#ff4d94;--btn-hover:#ff66a3;--accent-1:#d63384;--accent-2:#a61e4d;
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{
+    margin:0;font-family:Arial,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    background:linear-gradient(to bottom,var(--pink-1),var(--pink-2),var(--pink-3));
+    display:flex;justify-content:center;align-items:center;min-height:100vh;padding:16px;
+  }
+  .card{
+    background:rgba(255,255,255,.92);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.12);
+    width:100%;max-width:640px;padding:20px;text-align:center;
+  }
+  .hidden{display:none}
+  h1{color:var(--accent-1);margin:0 0 8px} h2{color:var(--accent-2);margin:0 0 16px}
+  button{
+    background:var(--btn);border:none;color:#fff;padding:10px 18px;margin:8px;border-radius:12px;cursor:pointer
+  }
+  button:hover{background:var(--btn-hover)}
+  button.secondary{background:#e4e4e7;color:#111}
+  input[type="text"],input[type="password"]{
+    padding:12px;border-radius:12px;border:1px solid #ff99c8;width:100%;max-width:460px;outline:none
+  }
+  .img-fit{width:100%;border-radius:16px;margin-bottom:14px;display:block}
+  .qr{margin-top:16px;display:grid;place-items:center;gap:8px;color:#7a385a}
+  .row-gap{margin-top:10px}
+  .error{color:#e11d48;font-weight:700}
+  .music-btn{
+    position:fixed;top:12px;right:12px;width:44px;height:44px;border-radius:999px;
+    box-shadow:0 6px 16px rgba(0,0,0,.15);display:grid;place-items:center;font-size:18px
+  }
+  .music-btn.playing{background:#10b981;color:#fff}
+  .hint{font-size:12px;color:#6b7280;margin-top:6px}
+</style>
+</head>
+<body>
+
+<button id="musicToggle" class="music-btn" aria-label="Activar música">♪</button>
+<audio id="music" preload="auto">
+  <!-- Cambia por tu archivo local o URL pública -->
+  <source src="assets/audio/Audios/Iframe I Wanna Be Yours [nyuo9-OjNNg].mp3" type="audio/mpeg" />
+</audio>
+
+<section class="card" id="loginScreen">
+  <h1>🔒 Acceso</h1>
+  <p>Ingresa la clave para continuar, por favor.</p>
+  <input type="password" id="passwordInput" placeholder="LLAVE DE ACCESO" />
+  <div class="row-gap">
+    <button id="loginBtn">Entrar</button>
+  </div>
+  <p id="loginError" class="error"></p>
+  <div class="hint">Discleimer:Es una fecha 😉</div>
+</section>
+
+<section class="card hidden" id="initial">
+  <!-- Cambia por tu imagen local/URL -->
+  <img class="img-fit" src="assets/audio/imagenenes/teffy 1.jpg" alt="Foto juntos" />
+  <h1>Te quiero muchísimo 💖</h1>
+  <h2>¿Quieres seguir compartiendo tu tiempo conmigo?</h2>
+  <div class="row-gap">
+    <button id="yesBtn">Sí</button>
+    <button id="noBtnStart">No</button>
+  </div>
+</section>
+
+<section class="card hidden" id="yesPath">
+  <img class="img-fit" src="assets/audio/imagenenes/alone girl.jpg" alt="The GORDITA" />
+  <h1>¡Me haces muy feliz! 😄</h1>
+  <h2>Déjame un mensajito 💌</h2>
+  <input type="text" id="msg" placeholder="Escribe aquí por qué me eliges…" />
+  <div class="row-gap">
+    <button id="sendMsgBtn">Mensaje</button>
+    <button class="secondary" id="backHome1">Volver al inicio</button>
+  </div>
+  <p id="msgResult" aria-live="polite"></p>
+
+  <div class="row-gap">
+    <button id="sendWhatsapp">Enviar a WhatsApp</button>
+    <div class="hint">Primero escribe el mensaje, luego lo envias. Sebas tip</div>
+  </div>
+
+  <div class="qr">
+    <img id="qrcode" alt="PROYECTOGORDITA3.0" width="160" height="160" />
+    <div>Escanéame para ver algo xd</div>
+  </div>
+</section>
+
+<section class="card hidden" id="noConfirm">
+  <img class="img-fit"  id="noImg" 
+  src="assets/audio/imagenenes/Pensando 1.jpg" alt="Pensando"  width="750" height="400"/>
+  <h1 id="noTitle">¿Estás segura?</h1>
+  <h2 id="noSubtitle">Podemos intentarlo de otra forma...</h2>
+  <div class="row-gap">
+    <button id="confirmNoYes">Sí</button>
+    <button id="confirmNoNo">No</button>
+  </div>
+  <p id="noTrickText" aria-live="polite"></p>
+  <div class="row-gap">
+    <button id="backHome2">Volver al inicio</button>
+  </div>
+</section>
+
+<section class="card hidden" id="caught">
+  <video id="finalVideo" width="500" height="350" controls playsinline preload="metadata" src="assets/audio/Videos/Video final.mp4"></video>
+  <h1>¡NO TE ESCAPARÁS TAN FACIL DE MÍ! ❤️</h1>
+  <div class="row-gap">
+    <button id="okCaught">Vas a tener que volver por el, Sí ❤️</button>
+    <button id="backHome3">Volver al inicio</button>
+  </div>
+</section>
+
+<script>
+  const WHATSAPP_NUMBER = "5491176226876";
+  const CANVA_URL = "https://www.canva.com/design/DAGxUQsJ9Hw/U3YkSArEbyvqw8flGpR2TA/edit?ui=eyJFIjp7IkE_IjoiTiIsIlMiOiJRUkNvZGUifX0";
+
+  // ====== UTIL ======
+  function show(id){
+    document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+  }
+
+  const music = document.getElementById("music");
+  const musicBtn = document.getElementById("musicToggle");
+  let isPlaying = false;
+  musicBtn.addEventListener("click", async ()=>{
+    if(!isPlaying){
+      try{ await music.play(); isPlaying=true; musicBtn.classList.add("playing"); }
+      catch(e){}
+    } else {
+      music.pause(); isPlaying=false; musicBtn.classList.remove("playing");
+    }
+  });
+
+  show("loginScreen");
+  document.getElementById("loginBtn").addEventListener("click", ()=>{
+    const pass = document.getElementById("passwordInput").value.trim();
+    const errorEl = document.getElementById("loginError");
+    if(pass==="310725"){
+      errorEl.textContent="";
+      show("initial");
+    }else{
+      errorEl.textContent="Creo que no es esa ❌";
+    }
+  });
+
+  document.getElementById("yesBtn").addEventListener("click", ()=>{
+    show("yesPath");
+    makeQR(); // genera QR cuando entra a la pantalla de Sí
+  });
+  document.getElementById("backHome1").addEventListener("click", ()=>show("initial"));
+  document.getElementById("backHome2").addEventListener("click", ()=>show("initial"));
+  document.getElementById("backHome3").addEventListener("click", ()=>show("initial"));
+
+  document.getElementById("sendMsgBtn").addEventListener("click", ()=>{
+    const msg = document.getElementById("msg").value.trim();
+    if(msg) document.getElementById("msgResult").textContent = "Tu mensajito: " + msg;
+  });
+
+
+  document.getElementById("sendWhatsapp").addEventListener("click", ()=>{
+    const msg = document.getElementById("msg").value.trim() || "(sin mensaje)";
+    const texto = encodeURIComponent("💌 Mensajito: " + msg);
+    if(!WHATSAPP_NUMBER || WHATSAPP_NUMBER.length<8){
+      alert("Configura tu número en WHATSAPP_NUMBER (formato internacional sin '+').");
+      return;
+    }
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${texto}`;
+    window.open(url, "_blank"); // abre WhatsApp (móvil o web)
+  });
+
+  // ====== FLUJO "NO" ======
+  let noClicks = 0;
+  const noSteps = [
+    { img:"assets/audio/imagenenes/Pensando 1.jpg", title:"¿Estás segura?", sub:"Puedo poner mil botones de no 💕", txt:"JAJAJAJA, intenta otra vez 😉" },
+    { img:"assets/audio/imagenenes/Pensando 1.jpg", title:"¿Muy segura?", sub:"Podemos intentarlo de otra forma :D 💕", txt:"Ajá… interesante 😜" },
+    { img:"assets/audio/imagenenes/Pensando 1.jpg", title:"¿Pero muy muy segura?", sub:"Si llegaste aquí, OK... 💕", txt:"" },
+  ];
+  document.getElementById("noBtnStart").addEventListener("click", ()=>{
+    noClicks = 0; goNoStep(noClicks);
+  });
+  document.getElementById("confirmNoNo").addEventListener("click", ()=>{
+    noClicks++;
+    if(noClicks>=noSteps.length){
+      show("caught");
+      const v = document.getElementById("finalVideo");
+      v.play().catch(()=>{});
+    } else {
+      goNoStep(noClicks);
+    }
+  });
+  document.getElementById("confirmNoYes").addEventListener("click", ()=>show("initial"));
+  function goNoStep(step){
+    const s = noSteps[step];
+    document.getElementById("noImg").src = s.img;
+    document.getElementById("noTitle").textContent = s.title;
+    document.getElementById("noSubtitle").textContent = s.sub;
+    document.getElementById("noTrickText").textContent = s.txt || "";
+    show("noConfirm");
+  }
+
+  function makeQR(){
+    const data = encodeURIComponent(CANVA_URL || window.location.href);
+    const qrImg = document.getElementById("qrcode");
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${data}`;
+  }
+</script>
+</body>
+</html>
