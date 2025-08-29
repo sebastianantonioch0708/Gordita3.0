@@ -107,7 +107,7 @@
 </section>
 
 <section class="card hidden" id="caught">
-  <video id="finalVideo" width="400" height="350" controls playsinline preload="metadata" src="videofinal11.mp4"></video>
+  <video id="finalVideo" width="300" height="350" controls playsinline preload="metadata" src="videofinal11.mp4"></video>
   <h1>¡NO TE ESCAPARÁS TAN FACIL DE MÍ! ❤️</h1>
   <div class="row-gap">
     <button id="okCaught">Vas a tener que volver por el, Sí ❤️</button>
@@ -119,9 +119,13 @@
   const WHATSAPP_NUMBER = "5491176226876";
   const CANVA_URL = "https://www.canva.com/design/DAGxUQsJ9Hw/U3YkSArEbyvqw8flGpR2TA/edit?ui=eyJFIjp7IkE_IjoiTiIsIlMiOiJRUkNvZGUifX0";
 
-  function show(id){
-    document.querySelectorAll(".card").forEach(c=>c.classList.add("hidden"));
-    document.getElementById(id).classList.remove("hidden");
+    function show(id){
+    document.querySelectorAll(".card").forEach(c=>{
+      c.classList.remove("active"); c.classList.add("hidden");
+    });
+    const el = document.getElementById(id);
+    el.classList.remove("hidden");
+    setTimeout(()=>el.classList.add("active"), 20);
   }
 
   const music = document.getElementById("music");
@@ -144,7 +148,7 @@
       errorEl.textContent="";
       show("initial");
     }else{
-      errorEl.textContent="Creo que no es esa ❌";
+      errorEl.textContent="Creo que esa no es :c ❌";
     }
   });
 
